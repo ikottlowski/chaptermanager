@@ -9,9 +9,12 @@ from .models import ContactInformation
 
 
 def chapter(request):
-    chapters = Chapter.objects.order_by('id')
-    result = ', '.join([c.get_name_display() for c in chapters])
-    return HttpResponse(result)
+    try:
+        chapters = Chapter.objects.order_by('id')
+        context = {'chapter_list': chapters}
+        return render(request, 'chapter/chapter_index.html', context)
+    except:
+        raise Http404('No Chapters to show')
 
 
 def chapter_detail(request, chapter_id):
@@ -30,8 +33,16 @@ def chapter_contact(request, chapter_id):
     return HttpResponse('Chapter Contact info: ' + chapter.contact_info.email)
 
 
-def member(requests):
-    return HttpResponse('Member endpoint')
+def chapter_members(request, chapter_id):
+    return
+
+def member(request):
+    #try:
+        members = Member.objects.order_by('id')
+        context = {'member_list': members}
+        return render(request, 'chapter/member_index.html', context)
+    # except:
+    #     raise Http404('No Members found')
 
 
 def member_detail(request, member_id):
