@@ -38,14 +38,15 @@ class Chapter(models.Model):
         for _ in range(count):
             try:
                 chapter = Chapter(
-                    name = random.choice(Chapter.CHAPTER_CHOICES),
-                    status = "status",
-                    school = business,
-                    contact_info = random.choice(contacts)
+                    name=random.choice(Chapter.CHAPTER_CHOICES),
+                    status="status",
+                    school=business,
+                    contact_info=random.choice(contacts)
                 )
                 chapter.save()
             except:
                 continue
+
 
 class Member(models.Model):
     RELATIONSHIP_CHOICES = (('1', 'Brother'),
@@ -60,7 +61,7 @@ class Member(models.Model):
                             ('10', 'Recruitment-Chair'),
                             ('11', 'Pledge-Education-Chair'))
     first_name = models.CharField(max_length=20, help_text="Enter first name")
-    sir_name = models.CharField(max_length=20, help_text="Enter last name")
+    sur_name = models.CharField(max_length=20, help_text="Enter last name")
     relationship = models.CharField(
         max_length=25, choices=RELATIONSHIP_CHOICES)
     chapter = models.ForeignKey('Chapter', on_delete=models.DO_NOTHING)
@@ -77,7 +78,7 @@ class Member(models.Model):
     submitted_date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-        return self.first_name + ' ' + self.sir_name
+        return self.first_name + ' ' + self.sur_name
 
     @staticmethod
     def _bootstrap(count=500, local='en'):
@@ -94,18 +95,19 @@ class Member(models.Model):
             try:
                 member = Member(
                     first_name=person.name(),
-                    sir_name=person.surname(),
+                    sur_name=person.surname(),
                     relationship=random.choice(Member.RELATIONSHIP_CHOICES),
                     chapter=random.choice(chapters),
                     church=random.choice(churches),
                     contact_info=random.choice(contact),
                     status=random.choice(Member.STATUS_CHOICES),
-                    activation_date=date.datetime(), # Time Zone problem when creating 
+                    activation_date=date.datetime(),  # Time Zone problem when creating
                     submitted_date=date.datetime()
                 )
                 member.save()
             except:
                 continue
+
 
 class MemberChurch(models.Model):
     SYNOD_CHOICES = (('1', 'LCMS'),

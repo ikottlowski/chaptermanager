@@ -8,6 +8,10 @@ from .models import MemberChurch
 from .models import ContactInformation
 
 
+def index(request):
+    return render(request, 'chapter/index.html', {})
+
+
 def chapter(request):
     try:
         chapters = Chapter.objects.order_by('id')
@@ -22,32 +26,34 @@ def chapter_detail(request, chapter_id):
         chapter = Chapter.objects.get(pk=chapter_id)
     except:
         raise Http404('Chapter not found.')
-    return HttpResponse('Chapter Detail: ' + chapter.get_name_display() + ' at ' + chapter.school)
-
-
-def chapter_contact(request, chapter_id):
-    try:
-        chapter = Chapter.objects.get(pk=chapter_id)
-    except:
-        raise Http404('Chapter not found.')
-    return HttpResponse('Chapter Contact info: ' + chapter.contact_info.email)
+    return HttpResponse('Chapter Detail: ' + str(chapter))
 
 
 def chapter_members(request, chapter_id):
+    try:
+        members = Member.objects.filter(chapter=chapter_id)
+        context = {'member_list' : members}
+        return render(request, 'chapter/member_index.html', context)
+    except:
+        raise Http404('No members for this chapter.')
+
+
+def chapter_member(request, chapter_id, member_id):
     return
 
+
 def member(request):
-    #try:
+    try:
         members = Member.objects.order_by('id')
         context = {'member_list': members}
         return render(request, 'chapter/member_index.html', context)
-    # except:
-    #     raise Http404('No Members found')
+    except:
+        raise Http404('No Members found.')
 
 
 def member_detail(request, member_id):
-    return HttpResponse('Member Detail' + str(member_id))
-
-
-def member_contact(request, member_id):
-    return HttpResponse('member contact' + str(member_id))
+    try:
+        member = Member.objects.get(pk=member_id)
+        return HttpResponse('Member Detail: ' + str(member))
+    except:
+        raise Http404('Member not found, or does not exist.')
